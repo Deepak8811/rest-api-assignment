@@ -1,7 +1,6 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-// const config = require("../config/auth");
 const generateToken = require("../utils/generateToken");
 
 /**
@@ -38,36 +37,16 @@ const getUserById = async (req, res, next) => {
  * @route   POST /users
  * @access  Public
  */
-// const createUser = async (req, res, next) => {
-//     try {
-//         const { name, email, password } = req.body;  // Accept password from body
-
-//         if (!name || !email || !password) {
-//             return res.status(400).json({ message: "All fields (name, email, password) are required" });
-//         }
-
-//         const newUser = await User.create({ name, email, password });
-
-//         res.status(201).json(newUser);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-
 const createUser = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
 
-        // Validate input
         if (!name || !email || !password) {
             return res.status(400).json({ message: "All fields (name, email, password) are required" });
         }
 
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10); // Ensure password is a string and salt rounds is a number
+        const hashedPassword = await bcrypt.hash(password, 10); 
 
-        // Create new user
         const newUser = await User.create({
             name,
             email,
@@ -77,8 +56,6 @@ const createUser = async (req, res, next) => {
         if (!newUser) {
             return res.status(500).json({ message: "User registration failed" });
         }
-
-        // Generate JWT token using the utility function
         const token = generateToken(newUser.id);
 
         res.status(201).json({
@@ -89,7 +66,7 @@ const createUser = async (req, res, next) => {
                 name: newUser.name,
                 email: newUser.email,
             },
-            token, // Return token in response
+            token,
         });
     } catch (error) {
         console.error("Error creating user:", error);
