@@ -18,7 +18,7 @@ output.log
 .env.development
 .env.production
 .env.test
-config/database.js
+# config/database.js
 
 # Database
 *.sqlite
